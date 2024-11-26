@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de Opciones</title>
+    <style>
+        /* Estilo general */
+        body {
+            background: linear-gradient(135deg, #f9c0ff, #f1c6f1); /* Degradado suave pastel */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            color: #4a4e69;
+        }
+
+        header {
+            width: 100%;
+            background-color: #6d6875; /* Fondo más oscuro para el header */
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 0; /* Espaciado más grande */
+        }
+
+        header h1 {
+            font-family: 'Georgia', serif;
+            font-size: 3.5rem; /* Tamaño más grande del título */
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #ffffff; /* Fondo blanco */
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            display: inline-block; /* Ajusta el tamaño al contenido */
+        }
+
+        .container a {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #ff9a9a; /* Color de fondo pastel */
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.2rem; /* Tamaño de fuente ligeramente más grande */
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container a:hover {
+            background-color: #ff6f61; /* Color más intenso al pasar el cursor */
+            transform: translateY(-3px); /* Efecto de desplazamiento */
+        }
+
+        .container a:active {
+            transform: translateY(1px); /* Efecto al hacer clic */
+        }
+
+        img {
+            width: 70%; /* Ajustar tamaño de la imagen */
+            height: auto; /* Mantener proporciones */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido</h1>
+    </header>
+
+    <div class="container">
+        <a href="{{ url_for('hoy_no_circula_view') }}">Hoy No Circula</a>
+        <a href="{{ url_for('registro_cita') }}">Registrar Cita</a>
+    </div>
+
+    <!-- Imagen debajo del recuadro de botones -->
+    <img src="/static/static/images/car.png" alt="Imagen de coche">
+</body>
+</html>
