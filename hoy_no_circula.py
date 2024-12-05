@@ -1,8 +1,11 @@
 from flask import Flask, request, render_template
+import re
 
 app = Flask(__name__)
 
-# Función para verificar restricciones de "Hoy no circula"
+def validar_placa(placa):
+    return re.fullmatch(r'[A-Za-z]{3}\d{1,4}', placa) is not None
+
 def hoy_no_circula(placa, dia):
     restricciones = {
         "lunes": [1, 2],
@@ -12,42 +15,35 @@ def hoy_no_circula(placa, dia):
         "viernes": [9, 0]
     }
     try:
-        # Extraer el último dígito de la placa
         ultimo_digito = int(placa[-1])
-        # Verificar si el día es válido y el último dígito está restringido
-        if dia in restricciones:
-            return ultimo_digito in restricciones[dia]
-        else:
-            return None  # Día no válido
+        return dia in restricciones and ultimo_digito in restricciones[dia]
     except (ValueError, IndexError):
-        return None  # Placa inválida (no termina en un número)
+        return None
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', message=None)
 
 @app.route('/verificar_hoy_no_circula', methods=['POST'])
 def verificar_hoy_no_circula():
-    # Obtener los datos del formulario
     placa = request.form.get('placa')
-    dia = request.form.get('dia').lower()  # Convertir el día a minúsculas para evitar errores
+    dia = request.form.get('dia').lower()
 
     if not placa or not dia:
-        return "Por favor, proporciona la placa y el día para verificar."
-
-    try:
-        # Extraer el último dígito de la placa
-        ultimo_digito = int(placa[-1])
-
-        # Verificar si el último dígito está restringido para el día seleccionado
-        if dia in hoy_no_circula:
-            if ultimo_digito in hoy_no_circula[dia]:
-                return f"La placa {placa} **NO** puede circular el día {dia.capitalize()}."
-            else:
-                return f"La placa {placa} **SÍ** puede circular el día {dia.capitalize()}."
+        message = "Por favor, proporciona ambos: una placa válida y un día."
+    elif not validar_placa(placa):
+        message = "Por favor, introduce una placa válida (ejemplo: ABC1234)."
+    else:
+        resultado = hoy_no_circula(placa, dia)
+        if resultado is None:
+            message = "El día ingresado no es válido o la placa no termina en un número."
+        elif resultado:
+            message = f"La placa {placa} <strong>NO</strong> puede circular el día {dia.capitalize()}."
         else:
-            return "El día seleccionado no es válido. Por favor, elige un día entre lunes y viernes."
-    except ValueError:
-        return "Por favor, proporciona una placa válida (que termine en un dígito)."
+            message = f"La placa {placa} <strong>SÍ</strong> puede circular el día {dia.capitalize()}."
 
-if __name__ == '__main__':
+    return render_template('index.html', message=message)
+
+if __name__ == "__main__":
     app.run(debug=True)
+
